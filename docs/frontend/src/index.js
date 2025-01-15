@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AlertProvider } from '../src/components/alert/AlertContext';
+import { AlertProvider } from './components/alert/AlertContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
