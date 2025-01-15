@@ -45,7 +45,7 @@ const Header = () => {
                         <div className="header__top-content-item">
                             <div>
                                 <div className="header__btn">
-                                    <a href="{{ url_for('user.user_page', usr_id=current_user.usr_id) }}" className="btn">
+                                    <a href="" className="btn">
                                         <i className="fa fa-user"></i> View Profile
                                     </a>
                                 </div>
@@ -53,7 +53,7 @@ const Header = () => {
 
                             <div>
                                 <div className="header__btn">
-                                    <a href="{{ url_for('auth.logout') }}"
+                                    <a href=""
                                         className="btn" 
                                         id="logout">
                                         <i className="fa fa-sign-out-alt"></i>

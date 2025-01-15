@@ -11,13 +11,11 @@ const ArmstrongChecker = () => {
         <div className="container">
             <div className="armstrong__container">    
 
-                <form id="armstrong-form" className="armstrong__form form__row" method="POST" action="{{ url_for('arm_num_checker.home_page') }}">
-                    {/* {{ form.csrf_token }} */}
+                <form id="armstrong-form" className="armstrong__form form__row" method="POST" action="">
                     <div className="armstrong__content">
 
                         <div className="armstrong__content-item">
                             <div className="form__group">
-                                {/* {{ form.min_num.label }} {{ form.min_num(size=10) }} */}
                                 <label htmlFor="min_num">Minimum Number:</label>
                                 <input type="number" name="min_num" className="form__input" id='min_num' placeholder='Enter Min Value'/>
                                 <div className="clear__input-container">
@@ -32,7 +30,6 @@ const ArmstrongChecker = () => {
 
                         <div className="armstrong__content-item">
                             <div className="form__group">
-                                {/* {{ form.max_num.label }} {{ form.max_num(size=10) }} */}
                                 <label htmlFor="max_num">Maximum Number:</label>
                                 <input type="number" name="max_num" className="form__input" id='max_num' placeholder='Enter Max Value'/>
                                 <div className="clear__input-container">
@@ -55,7 +52,6 @@ const ArmstrongChecker = () => {
 
                                 <div className="find_armstg_num__container">
                                     <Tooltip text="Find Armstrong Numbers">
-                                        {/* {{ form.submit() }} */}
                                         <button type="submit" className='btn' id='find_armstrong_nums'>
                                         <i className="fa fa-search"></i>
                                         </button>
@@ -67,12 +63,9 @@ const ArmstrongChecker = () => {
                     </div>    
                 </form> 
 
-                <form className="armstrong__form form__row" action="{{ url_for('arm_num_checker.home_page') }}" method="POST" id="check-number-form">
-                    {/* {{ form2.csrf_token }} */}
+                <form className="armstrong__form form__row" action="" method="POST" id="check-number-form">
                     <div className="check__num-content">
                         <div className="form__group">
-                            {/* {{ form2.check_particular_num.label }} {{ form2.check_particular_num(size=10) }} */}
-
                             <label htmlFor="check_particular_num">Enter a Number:</label>
                             <input type="number" name="check_particular_num" className="form__input" id='check_particular_num' placeholder='Enter a Number'/>
 
@@ -86,7 +79,6 @@ const ArmstrongChecker = () => {
                                 </div>
 
                                 <div className="find_armstg_num__container">
-                                    {/* {{ form2.submit() }} */}
                                     <Tooltip text="Check Number">
                                         <button type="submit" className='btn btn__small' id='find_armstrong_num'>
                                             <i className="fa fa-search"></i>

@@ -58,38 +58,30 @@ const Contact = () => {
                     </div>
 
                     <div className="contact__info-content-item">
-                        {/* <!-- form --> */}
-                        {/* {% include "partials/_alert.html" %} */}
-                        <form className="contact__form form__row " method="POST" action="{{ url_for('arm_num_checker.contact_page', usr_id=current_user.usr_id) }}" id="contactForm">
-                            {/* {{ form.csrf_token }} */}
+                        <form className="contact__form form__row " method="POST" action="" id="contactForm">
                             <div className="contact__form-container">
                                 <div className="form__group">
-                                    {/* {{ form.name.label }} {{ form.name(size=32) }} */}
                                     <label htmlFor="name">Full Name:</label>
                                     <input type="text" name="name" size="32" className="form__input" id='name' required placeholder='John Doe'/>
                                 </div>
                                 
                                 <div className="form__group">
-                                    {/* {{ form.email.label }} {{ form.email(size=32) }} */}
                                     <label htmlFor="email">Email:</label>
                                     <input type="email" name="email" size="32" className="form__input" id='email' required placeholder='example@example.com'/>
                                 </div>
 
                                 <div className="form__group">
-                                    {/* {{ form.subject.label }} {{ form.subject(size=32) }} */}
                                     <label htmlFor="subject">Subject:</label>
                                     <input type="text" name="subject" size="32" className="form__input" id='subject' required placeholder='Suggestion'/>
                                 </div>
                                 
                                 <div className="form__group">
-                                    {/* {{ form.message.label }} {{ form.message(rows=6, cols=50) }}*/}
                                     <label htmlFor="message">Message:</label>
                                     <textarea class="form__input" cols="50" id="message" name="message" placeholder="Message" required="" rows="6"></textarea>
                                 </div>
                             </div>
 
                             <div className="contact__form-content">
-                                {/* {{ form.submit() }} */}
                                 <button type="submit" className='btn submit__btn'>
                                 Send <i className="fa fa-check"></i> 
                                 </button>
