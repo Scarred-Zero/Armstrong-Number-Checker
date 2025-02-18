@@ -1,8 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import ArmstrongChecker from './ArmstrongChecker';
 import './Home.css';
-
 
 const Home = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });

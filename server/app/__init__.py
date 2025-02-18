@@ -1,4 +1,5 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
+from flask import Flask, render_template, flash, redirect, url_for, request, jsonify
+from flask_cors import CORS
 from flask_login import LoginManager
 from os import path
 from .config.database import db
@@ -8,6 +9,9 @@ from .config.variables import SECRET_KEY, MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MY
 
 def create_app():
     app = Flask(__name__)
+    
+    # Initialize CORS
+    CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}})
 
     # CONFIGS
     app.config['SECRET_KEY'] = SECRET_KEY
@@ -53,15 +57,17 @@ def create_app():
         return redirect(url_for('auth.login_page', next=request.endpoint))
 
     # Error handling
-    @app.errorhandler(404)
-    def page_not_found(error):
-        print("404 ERROR:", str(error))
-        return render_template("errors/error-404.html")
+    @app.errorhandler(400)
+    def bad_request_error(error):
+        response = jsonify({'error': 'Bad request', 'message': str(error)})
+        response.status_code = 400
+        return response
 
-    @app.errorhandler(Exception)
-    def server_error(error):
-        print("SERVER ERROR:", str(error))
-        return render_template("errors/server-error.html")
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        response = jsonify({'error': 'Internal server error', 'message': str(error)})
+        response.status_code = 500
+        return response
 
     return app
 
