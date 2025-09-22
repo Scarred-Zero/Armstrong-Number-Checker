@@ -5,6 +5,7 @@
 }
 
 .armstrong__container {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 25rem;
@@ -98,29 +99,50 @@ ARMSTRONG FORM SECTION
 }
 
 .alert {
-    padding: 15px;
-    margin-bottom: 20px;
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: 4px;
+    border-radius: 0.85rem;
 }
 
 .alert-danger {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }
 
+.results__container {
+    display: flex;
+    gap: 5rem;
+    width: fit-content;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* filter: blur(3px); */
+    border-radius: 0.75rem;
+    border-inline: #0077b5 solid 2px;
+    position: relative;
+    z-index: 1;
+    scroll-margin-top: 80px;
+    transition: filter 0.3s ease-in-out;
+}
+/* 
+.results__container:hover {
+    filter: blur(0);
+} */
+
 .result {
-    margin-top: 20px;
     padding: 15px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #DC5F00;
+    border-radius: 0.5rem;
 }
 
 .result h3 {
     margin-top: 0;
-    color: #333;
+    color: #DC5F00;
 }
 
 .result ul {
@@ -130,14 +152,34 @@ ARMSTRONG FORM SECTION
 
 .result ul li {
     padding: 5px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: transparent;
+    border-bottom: 1px solid #0077b5;
     border-radius: 4px;
     margin-bottom: 5px;
+    color: white;
 }
 
 .result p {
-    color: #333;
+    color: white;
+}
+
+.result .btn__close {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 0.3rem;
+    border-radius: 50%;
+    background: var(--at-danger);
+    cursor: pointer;
+}
+
+.result .btn__close:hover {
+    background: #dc0000;
+    color: white;
+}
+
+.result>.btn__close>.fa {
+    margin-right: 0px;
 }
 
 
@@ -200,10 +242,26 @@ ABOUT SECTION
     }
 }
 
+#error {
+    position: absolute;
+    top: -5rem;
+    right: -8rem;
+}
+
 
 @media screen and (max-width: 1030px) {
     .armstrong__container {
         padding: 0 3rem;
+    }
+
+    #error.alert {
+        padding: 1rem;
+        width: fit-content;
+    }
+
+    #error {
+        top: -6rem;
+        right: 0rem;
     }
 }
 
@@ -232,6 +290,10 @@ ABOUT SECTION
 
     .about__section-content-item p {
         font-size: 1rem;
+    }
+
+    #error {
+        left: 0;
     }
 }
 
@@ -288,6 +350,19 @@ ABOUT SECTION
     .about__section-content {
         padding: 1rem 3rem;
     }
+
+    #error.alert {
+        padding: 0.75rem;
+    }
+
+    #error>p {
+        font-size: 14px;
+    }
+
+    .results__container {
+        flex-direction: column;
+        gap: 2rem;
+    }
 }
 
 @media screen and (max-width: 390px) {
@@ -301,6 +376,22 @@ ABOUT SECTION
 
     .armstrong__content-item:nth-child(3) #find_armstrong_nums {
         margin-left: 2rem;
+    }
+
+    #error.alert {
+        padding: 0.5rem;
+    }
+
+    #error {
+        top: -4.5rem;
+    }
+
+    #error>p {
+        font-size: 12px;
+    }
+
+    .result h3 {
+        font-size: 20px;
     }
 }
 

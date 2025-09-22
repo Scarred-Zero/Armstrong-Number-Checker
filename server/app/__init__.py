@@ -28,7 +28,7 @@ def create_app():
 
     # Blueprint for Armstrong Number Checker
     from app.views.app_routes import arm_num_checker
-    app.register_blueprint(arm_num_checker, url_prefix='/arm-num-checker')
+    app.register_blueprint(arm_num_checker)
 
     # Blueprint for user management
     # from .views.user import user_bluprt

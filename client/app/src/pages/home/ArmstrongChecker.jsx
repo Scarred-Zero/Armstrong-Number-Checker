@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Tooltip from '../../components/Tooltip/Tooltip';
 import './Home.css'
@@ -10,6 +10,24 @@ const ArmstrongChecker = () => {
     const [rangeResult, setRangeResult] = useState(null);
     const [checkResult, setCheckResult] = useState(null);
     const [error, setError] = useState(null);
+    const resultRef = useRef(null);
+
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => setError(null), 10000); // 10 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
+    useEffect(() => {
+        if ((rangeResult || checkResult) && resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth' });
+            // Adjust offset (e.g., scroll up by 80px)
+            setTimeout(() => {
+                window.scrollBy({ top: -150, left: 0, behavior: 'smooth' });
+            }, 400); // Delay to allow scrollIntoView to finish
+        }
+    }, [rangeResult, checkResult]);
 
     const handleRangeSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +38,8 @@ const ArmstrongChecker = () => {
             });
             if (response.status === 200) {
                 setRangeResult(response.data.armstrong_numbers);
-                console.log(response.data.armstrong_numbers);
+                setMaxNum('');
+                setMinNum('');
                 setError(null);
             } else {
                 setError('Unexpected response status');
@@ -28,7 +47,6 @@ const ArmstrongChecker = () => {
             }
         } catch (err) {
             setError(err.response?.data?.error || 'An error occurred');
-            console.log(err.response?.data?.error);
             setRangeResult(null);
         }
     };
@@ -41,6 +59,7 @@ const ArmstrongChecker = () => {
                 number: parseInt(particularNum)
             });
             setCheckResult(response.data.result);
+            setParticularNum('');
             setError(null);
         } catch (err) {
             setError(err.response.data.error);
@@ -106,7 +125,7 @@ const ArmstrongChecker = () => {
                         <div className="check__num-content">
                             <div className="form__group">
                                 <label htmlFor="check_particular_num">Enter a Number:</label>
-                                <input type="number" name="check_particular_num" className="form__input" id='check_particular_num' placeholder='Enter a Number' value={particularNum} onChange={(e) => setParticularNum(e.target.value)} />
+                                <input type="number" name="check_particular_num" className="form__input" id='check_particular_num' placeholder='Enter a Number' value={particularNum} onChange={(e) => setParticularNum(e.target.value)} required />
                                 <div className="btn__container">
                                     <div className="clear__allInputs-container">
                                         <Tooltip text="Clear Input">
@@ -127,25 +146,51 @@ const ArmstrongChecker = () => {
                         </div>
                     </form>
 
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    {rangeResult && (
-                        <div className="result">
-                            <h3>Armstrong Numbers in Range:</h3>
-                            <ul>
-                                {rangeResult.map((num, index) => (
-                                    <li key={index}>{num}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                    {checkResult && (
-                        <div className="result">
-                            <h3>Check Result:</h3>
-                            <p>{checkResult}</p>
+                    {error && (
+                        <div id="error" className="alert alert-danger">
+                            <p>{error}</p>
                         </div>
                     )}
 
                 </div>
+                {(rangeResult || checkResult) && (
+                    <div ref={resultRef} className='results__container'>
+                        {rangeResult && (
+                            <div className="result">
+                                <button
+                                    className="btn btn__close"
+                                    style={{ float: 'right', marginLeft: '10px' }}
+                                    onClick={() => setRangeResult(null)}
+                                    aria-label="Close"
+                                    type="button"
+                                >
+                                    <i className="fa fa-times"></i>
+                                </button>
+                                <h3>Armstrong Numbers in Range:</h3>
+                                <ul>
+                                    {rangeResult.map((num, index) => (
+                                        <li key={index}>{num}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        {checkResult && (
+                            <div className="result">
+                                <button
+                                    className="btn btn__close"
+                                    style={{ float: 'right', marginLeft: '10px' }}
+                                    onClick={() => setCheckResult(null)}
+                                    aria-label="Close"
+                                    type="button"
+                                >
+                                    <i className="fa fa-times"></i>
+                                </button>
+                                <h3>Check Result:</h3>
+                                <p><strong>{checkResult}</strong></p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </section>
     );
