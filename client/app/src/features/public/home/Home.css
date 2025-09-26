@@ -208,7 +208,7 @@ ABOUT SECTION
 }
 
 .about__img {
-    background: url(../../assets/images/female-teacher.jpg);
+    background: url('../../assets/images/female-teacher.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

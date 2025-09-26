@@ -3,36 +3,43 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from os import path
 from .config.database import db
-from .models.Models import User
-from .config.variables import SECRET_KEY, MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, DATABASE_URI, CLIENT_URI
+from .models.User import User
+from .config.variables import (
+    SECRET_KEY,
+    JWT_SECRET,
+    MYSQL_HOST,
+    MYSQL_PORT,
+    MYSQL_USER,
+    MYSQL_PASSWORD,
+    MYSQL_DB,
+    DATABASE_URI,
+    CLIENT_URI,
+)
+from flask_jwt_extended import JWTManager
+from .utils.helpers import response
 
 
 def create_app():
     app = Flask(__name__)
-    
-    # Initialize CORS
-    CORS(app, resources={r"/*": {"origins": [CLIENT_URI]}},)
 
     # CONFIGS
-    app.config['SECRET_KEY'] = SECRET_KEY
-    app.config['MYSQL_HOST'] = MYSQL_HOST
-    app.config['MYSQL_PORT'] = MYSQL_PORT
-    app.config['MYSQL_USER'] = MYSQL_USER
-    app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
-    app.config['MYSQL_DB'] = MYSQL_DB
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+    app.config["SECRET_KEY"] = SECRET_KEY
+    app.config["MYSQL_HOST"] = MYSQL_HOST
+    app.config["MYSQL_PORT"] = MYSQL_PORT
+    app.config["MYSQL_USER"] = MYSQL_USER
+    app.config["MYSQL_PASSWORD"] = MYSQL_PASSWORD
+    app.config["MYSQL_DB"] = MYSQL_DB
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
 
-    # Blueprint for authentication
-    # from .views.auth import auth
-    # app.register_blueprint(auth, url_prefix='/auth')
+    # MIDDLEWARES
+    CORS(app, resources={r"/*": {"origins": [CLIENT_URI]}},)
+    
+    app.config["JWT_SECRET_KEY"] = JWT_SECRET
+    jwt = JWTManager(app)
 
-    # Blueprint for Armstrong Number Checker
-    from app.views.app_routes import arm_num_checker
-    app.register_blueprint(arm_num_checker)
-
-    # Blueprint for user management
-    # from .views.user import user_bluprt
-    # app.register_blueprint(user_bluprt, url_prefix='/user')
+    # BLUEPRINT FOR ALL ROUTES
+    from .views import routes
+    app.register_blueprint(routes, url_prefix="/api/v1")
 
     # Other setups
     db.init_app(app)
@@ -54,26 +61,27 @@ def create_app():
     # @login_manager.unauthorized_handler
     # def handle_needs_login():
     #     flash("You have to be logged in to access this page.")
-        # return redirect(url_for('auth.login_page', next=request.endpoint))
+    # return redirect(url_for('auth.login_page', next=request.endpoint))
 
-    # Error handling
+    # ERROR ROUTES
     @app.errorhandler(400)
     def bad_request_error(error):
-        response = jsonify({'error': 'Bad request', 'message': str(error)})
-        response.status_code = 400
-        return response
+        return response(str(error), None, False)
 
-    @app.errorhandler(500)
-    def internal_server_error(error):
-        response = jsonify({'error': 'Internal server error', 'message': str(error)})
-        response.status_code = 500
-        return response
+    @app.errorhandler(404)
+    def invalid_route(error):
+        return response("Invalid route", None, False)
+    
+    @app.errorhandler(Exception)
+    def server_error(error):
+        print("SERVER ERROR:", str(error))
+        return response(str(error), None, False)
 
     return app
 
 
 def create_database(app):
-    if not path.exists('app/' + MYSQL_DB):
+    if not path.exists("app/" + MYSQL_DB):
         with app.app_context():
             db.create_all()
-            print(' *', 'Database created and tables initialized!')
+            print(" *", "Database created and tables initialized!")

@@ -1,23 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/header/Header';
-import Home from './pages/home/Home';
-import Contact from './pages/contact/Contact';
-import Footer from './components/footer/Footer';
-import ScrollUp from './components/scrollUp/ScrollUp';
-// import './assets/css/bootstrap.css';
+import AuthRoutes from "./routes/AuthRoutes";
+import PublicRoutes from "./routes/PublicRoutes";
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-           <Route path="/contact" element={<Contact />} /> 
-        </Routes>
-      <Footer />
-      <ScrollUp /> 
+      <Routes>
+        <Route path="/*" element={<PublicRoutes />} />
+        <Route path="secure/*" element={<AuthRoutes />} />
+      </Routes>
     </Router>
   );
 }

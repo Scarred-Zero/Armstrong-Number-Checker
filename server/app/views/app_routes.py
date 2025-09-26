@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, session
 from flask_cors import cross_origin
-from flask_login import login_required
 
 # Create a Blueprint
 arm_num_checker = Blueprint("arm_num_checker", __name__)
@@ -9,8 +8,7 @@ arm_num_checker = Blueprint("arm_num_checker", __name__)
 def is_armstrong(number):
     num_str = str(number)
     num_digits = len(num_str)
-    total = sum(int(digit) ** num_digits for digit in num_str)
-    return total == number
+    return sum(int(digit) ** num_digits for digit in num_str) == number
 
 
 def build_cors_preflight_response():
@@ -22,73 +20,64 @@ def build_cors_preflight_response():
     return response
 
 
+def validate_int(value, name):
+    try:
+        value = int(value)
+        if value < 1:
+            raise ValueError
+        return value, None
+    except (TypeError, ValueError):
+        return None, f"{name} must be a positive integer."
+
+
 # API Endpoint to check a range of numbers
-@arm_num_checker.route("/api/arm_num_checker/check-range", methods=["POST", "OPTIONS"])
+@arm_num_checker.route("/arm_num_checker/check-range", methods=["POST", "OPTIONS"])
 @cross_origin(origin="http://localhost:5173")
-# @login_required
 def check_range():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()
-    else:
-        return handle_check_range()
-
-
-def handle_check_range():
     data = request.json
     if not data:
         return jsonify({"error": "No input data provided."}), 400
 
-    min_num = data.get("minNum")
-    max_num = data.get("maxNum")
-
-    # Check for None
-    if min_num is None or max_num is None:
-        return jsonify({"error": "Minimum and Maximum numbers are required."}), 400
-
-    # Convert to int if possible
-    try:
-        min_num = int(min_num)
-        max_num = int(max_num)
-    except (TypeError, ValueError):
-        return jsonify({"error": "Minimum and Maximum numbers must be integers."}), 400
-
+    min_num, min_err = validate_int(data.get("minNum"), "Minimum number")
+    max_num, max_err = validate_int(data.get("maxNum"), "Maximum number")
+    if min_err or max_err:
+        return jsonify({"error": min_err or max_err}), 400
     if min_num > max_num:
-        return (jsonify({"error": "Minimum number must be less than Maximum number."}), 400,)
-    if min_num < 1 or max_num < 1:
-        return (jsonify({"error": "Please enter positive integers for Minimum and Maximum numbers."}), 400,)
+        return (
+            jsonify(
+                {
+                    "error": "Minimum number must be less than or equal to Maximum number."
+                }
+            ),
+            400,
+        )
 
-    armstrong_numbers = [number for number in range(min_num, max_num + 1) if is_armstrong(number)]
+    armstrong_numbers = [n for n in range(min_num, max_num + 1) if is_armstrong(n)]
     if not armstrong_numbers:
-        return (jsonify({"error": "No Armstrong numbers found within the given range."}), 400,)
+        return (
+            jsonify({"error": "No Armstrong numbers found within the given range."}),
+            400,
+        )
 
     session["armstrong_numbers"] = armstrong_numbers
     return jsonify({"armstrong_numbers": armstrong_numbers}), 200
 
 
 # API Endpoint to check a specific number
-@arm_num_checker.route("/api/arm_num_checker/check-number", methods=["POST", "OPTIONS"])
+@arm_num_checker.route("/arm_num_checker/check-number", methods=["POST", "OPTIONS"])
 @cross_origin(origin="http://localhost:5173")
-# @login_required
 def check_number():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()
-    else:
-        return handle_check_number()
-
-
-def handle_check_number():
     data = request.json
     if not data:
         return jsonify({"error": "No input data provided."}), 400
-    number = data.get("number")
 
-    if number < 1:
-        return jsonify({"error": "Please enter a positive integer to check."}), 400
-    if not isinstance(number, int):
-        return jsonify({"error": "Input must be an integer."}), 400
-    if number is None:
-        return jsonify({"error": "No input data provided."}), 400
-    
+    number, err = validate_int(data.get("number"), "Input")
+    if err:
+        return jsonify({"error": err}), 400
 
     result = (
         f"{number} is an Armstrong Number"
@@ -97,22 +86,6 @@ def handle_check_number():
     )
     session["check_num_result"] = result
     return jsonify({"result": result}), 200
-
-
-# # ROUTES FOR DISPLAYING RESULTS
-# @arm_num_checker.route("/results", methods=["GET"])  # <usr_id>
-# @login_required
-# def results_page():
-#     # RETRIEVE THE RESULT FROM THE SESSION
-#     armstrong_numbers = session.get('armstrong_numbers')
-#     result = session.get('check_num_result')
-
-#     return render_template(
-#         "results.html",
-#         armstrong_number=armstrong_numbers,
-#         result=result,
-#         title="Results | Armstrong Number Checker",
-#     )
 
 
 # # ROUTES FOR CONTACT PAGE

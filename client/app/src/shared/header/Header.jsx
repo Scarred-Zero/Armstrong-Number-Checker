@@ -56,9 +56,9 @@ const Header = () => {
                         <div className="header__top-content-item">
                             <div>
                                 <div className="header__btn">
-                                    <a href="" className="btn">
+                                    <Link to="/profile" className="btn">
                                         <i className="fa fa-user"></i> View Profile
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
 
@@ -79,9 +79,9 @@ const Header = () => {
             </div>
 
             <nav className="nav">
-                <a className="nav__logo" href="index.html">
+                <Link className="nav__logo" to="/">
                     <img src={AppNameImg} alt="Armstrong Number Checker" className="appName__img" />
-                </a>
+                </Link>
                 <OutsideClickHandler onOutsideClick={() => setMenuOpened(false)}>
                     <div className="nav__menu" style={getMenuStyles(menuOpened)}>
                         <ul className="nav__list">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import Tooltip from '../../components/Tooltip/Tooltip';
+import Tooltip from '../../../components/Tooltip/Tooltip';
 import './Home.css'
 
 const ArmstrongChecker = () => {
@@ -11,11 +11,23 @@ const ArmstrongChecker = () => {
     const [checkResult, setCheckResult] = useState(null);
     const [error, setError] = useState(null);
     const resultRef = useRef(null);
+    const errorRef = useRef(null);
+    const apiUrlPrefix = import.meta.env.VITE_API_PREFIX;
 
     useEffect(() => {
         if (error) {
             const timer = setTimeout(() => setError(null), 10000); // 10 seconds
             return () => clearTimeout(timer);
+        }
+    }, [error]);
+
+    useEffect(() => {
+        if (error && errorRef.current) {
+            errorRef.current.scrollIntoView({ behavior: 'smooth' });
+            // Adjust offset (e.g., scroll up by 80px)
+            setTimeout(() => {
+                window.scrollBy({ top: -150, left: 0, behavior: 'smooth' });
+            }, 400); // Delay to allow scrollIntoView to finish
         }
     }, [error]);
 
@@ -32,7 +44,7 @@ const ArmstrongChecker = () => {
     const handleRangeSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/arm_num_checker/check-range', {
+            const response = await axios.post(`${apiUrlPrefix}/check-range`, {
                 minNum: parseInt(minNum),
                 maxNum: parseInt(maxNum)
             });
@@ -55,7 +67,7 @@ const ArmstrongChecker = () => {
     const handleCheckSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/arm_num_checker/check-number', {
+            const response = await axios.post(`${apiUrlPrefix}/check-number`, {
                 number: parseInt(particularNum)
             });
             setCheckResult(response.data.result);
@@ -147,7 +159,7 @@ const ArmstrongChecker = () => {
                     </form>
 
                     {error && (
-                        <div id="error" className="alert alert-danger">
+                        <div ref={errorRef} id="error" className="alert alert-danger">
                             <p>{error}</p>
                         </div>
                     )}
