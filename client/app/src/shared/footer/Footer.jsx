@@ -1,6 +1,7 @@
 import React from 'react';
 import AppNameImg from '../../assets/images/app_name.png';
 import './Footer.css'
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -35,9 +36,9 @@ const Footer = () => {
                 <div className="footer__btm-content">
 
                     <div className="footer__btm-content-item">
-                        <div className="footer__logo">
+                        <Link className="footer__logo" to="/">
                             <img src={AppNameImg} alt="Armstrong Number Checker" className="appName__img"/>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="footer__btm-content-item">

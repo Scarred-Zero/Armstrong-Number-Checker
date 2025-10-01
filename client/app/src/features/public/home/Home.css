@@ -54,18 +54,18 @@ ARMSTRONG FORM SECTION
 }
 
 .clear__input-container {
-    margin-top: .5rem;
+    margin-top: .8rem;
     text-align: right;
 }
 
 .clear__allInputs-container {
-    margin-top: .5rem;
+    margin-top: .8rem;
     margin-left: .5rem;
     text-align: left;
 }
 
 .find_armstg_num__container {
-    margin-top: .5rem;
+    margin-top: .8rem;
     text-align: right;
 }
 
@@ -79,38 +79,18 @@ ARMSTRONG FORM SECTION
 
 #find_armstrong_nums:hover,
 #find_armstrong_num:hover {
-    transform: scale(1.05);
     background: #f26c07;
 }
 
 .btn__clear {
     box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.7);
-    padding: 0;
+    padding: 1rem;
     border: none;
-}
-
-.btn__clear:hover {
-    transform: scale(1.05);
 }
 
 .btn__container {
     display: flex;
     justify-content: space-around;
-}
-
-.alert {
-    position: relative;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    border-radius: 0.85rem;
-}
-
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
 }
 
 .results__container {
@@ -120,18 +100,13 @@ ARMSTRONG FORM SECTION
     margin-top: 2rem;
     padding: 1.5rem;
     background-color: rgba(0, 0, 0, 0.3);
-    /* filter: blur(3px); */
     border-radius: 0.75rem;
     border-inline: #0077b5 solid 2px;
     position: relative;
     z-index: 1;
     scroll-margin-top: 80px;
-    transition: filter 0.3s ease-in-out;
+    transition: all 500ms ease-in-out;
 }
-/* 
-.results__container:hover {
-    filter: blur(0);
-} */
 
 .result {
     padding: 15px;
@@ -184,7 +159,6 @@ ARMSTRONG FORM SECTION
 
 
 
-
 /* ====================
 ABOUT SECTION
 ======================*/
@@ -208,7 +182,7 @@ ABOUT SECTION
 }
 
 .about__img {
-    background: url('../../assets/images/female-teacher.jpg');
+    background: url('../../../assets/images/auth_bg.avif');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -247,7 +221,6 @@ ABOUT SECTION
     top: -5rem;
     right: -8rem;
 }
-
 
 @media screen and (max-width: 1030px) {
     .armstrong__container {

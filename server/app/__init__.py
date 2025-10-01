@@ -2,6 +2,7 @@ from flask import Flask, render_template, flash, redirect, url_for, request, jso
 from flask_cors import CORS
 from flask_login import LoginManager
 from os import path
+from .utils.errors import CustomRequestError
 from .config.database import db
 from .models.User import User
 from .config.variables import (
@@ -17,6 +18,7 @@ from .config.variables import (
 )
 from flask_jwt_extended import JWTManager
 from .utils.helpers import response
+from http import HTTPStatus
 
 
 def create_app():
@@ -32,13 +34,17 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
 
     # MIDDLEWARES
-    CORS(app, resources={r"/*": {"origins": [CLIENT_URI]}},)
-    
+    CORS(
+        app,
+        resources={r"/*": {"origins": [CLIENT_URI]}},
+    )
+
     app.config["JWT_SECRET_KEY"] = JWT_SECRET
     jwt = JWTManager(app)
 
     # BLUEPRINT FOR ALL ROUTES
     from .views import routes
+
     app.register_blueprint(routes, url_prefix="/api/v1")
 
     # Other setups
@@ -50,18 +56,19 @@ def create_app():
     create_database(app)
 
     # Login Manager
-    # login_manager = LoginManager()
-    # login_manager.login_view = 'auth.login_page'
-    # login_manager.init_app(app)
+    login_manager = LoginManager()
+    login_manager.login_view = "auth.handle_user_login"
+    login_manager.init_app(app)
 
-    # @login_manager.user_loader
-    # def load_user(usr_id):
-    #     return User.query.get(usr_id)
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(id)
 
-    # @login_manager.unauthorized_handler
-    # def handle_needs_login():
-    #     flash("You have to be logged in to access this page.")
-    # return redirect(url_for('auth.login_page', next=request.endpoint))
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        if request.blueprint == "users":
+            return response("You need to be authenticated to access this route", None, False), 401
 
     # ERROR ROUTES
     @app.errorhandler(400)
@@ -71,7 +78,7 @@ def create_app():
     @app.errorhandler(404)
     def invalid_route(error):
         return response("Invalid route", None, False)
-    
+
     @app.errorhandler(Exception)
     def server_error(error):
         print("SERVER ERROR:", str(error))

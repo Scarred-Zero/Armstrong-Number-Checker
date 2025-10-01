@@ -123,7 +123,7 @@ const ArmstrongChecker = () => {
                                     </div>
                                     <div className="find_armstg_num__container">
                                         <Tooltip text="Find Armstrong Numbers">
-                                            <button type="submit" className='btn' id='find_armstrong_nums'>
+                                            <button type="submit" className='btn btn__clear' id='find_armstrong_nums'>
                                                 <i className="fa fa-search"></i>
                                             </button>
                                         </Tooltip>
@@ -160,7 +160,7 @@ const ArmstrongChecker = () => {
 
                     {error && (
                         <div ref={errorRef} id="error" className="alert alert-danger">
-                            <p>{error}</p>
+                            {error}
                         </div>
                     )}
 

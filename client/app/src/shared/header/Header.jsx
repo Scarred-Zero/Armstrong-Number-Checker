@@ -1,11 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OutsideClickHandler from 'react-outside-click-handler';
 import AppNameImg from '../../assets/images/app_name.png';
 import './Header.css';
+import { useAuth } from '../../context/AuthContext';
 
 
 const Header = () => {
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+    const apiAuthUrlPrefix = import.meta.env.VITE_API_AUTH_URL_PREFIX;
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post(
+                `${apiAuthUrlPrefix}/logout`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                }
+            );
+            logout();
+            navigate('/secure/sign-in');
+        } catch (err) {
+            // Optionally show an error message
+            console.error('Logout failed:', err);
+            logout();
+            navigate('/secure/sign-in');
+        }
+    };
 
     useEffect(() => {
         const handleScrollHeader = () => {
@@ -53,25 +78,34 @@ const Header = () => {
                             </ul>
                         </div>
 
-                        <div className="header__top-content-item">
-                            <div>
-                                <div className="header__btn">
-                                    <Link to="/profile" className="btn">
-                                        <i className="fa fa-user"></i> View Profile
-                                    </Link>
+                        <div className="header__top-content">
+                            {!isAuthenticated ? (
+                                <div className="header__top-content-item">
+                                    <div className="header__btn">
+                                        <Link to="/secure/sign-up" className="btn">
+                                            Sign Up <i className="fa fa-user-plus"></i>
+                                        </Link>
+                                    </div>
+                                    <div className="header__btn">
+                                        <Link to="/secure/sign-in" className="btn">
+                                            Sign In <i className="fa fa-sign-in"></i>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div>
-                                <div className="header__btn">
-                                    <a href=""
-                                        className="btn"
-                                        id="logout">
-                                        <i className="fa fa-sign-out-alt"></i>
-                                        Logout
-                                    </a>
+                            ) : (
+                                <div className="header__top-content-item">
+                                    <div className="header__btn">
+                                        <Link to="/profile" className="btn">
+                                            View Profile <i className="fa fa-user"></i>
+                                        </Link>
+                                    </div>
+                                    <div className="header__btn">
+                                        <a href="#" className="btn" id="logout" onClick={handleLogout}>
+                                            Logout <i className="fa fa-sign-out"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                     </div>
@@ -89,7 +123,6 @@ const Header = () => {
                                 <Link
                                     to='/'
                                     onClick={() => setActiveNav('#home')} className={activeNav === '#home' ? 'nav__link active' : 'nav__link'}>
-                                    <i className="fa fa-house nav__icon"></i>
                                     Home
                                 </Link>
                             </li>
@@ -97,7 +130,6 @@ const Header = () => {
                                 <Link
                                     to="/contact"
                                     onClick={() => setActiveNav('#contact')} className={activeNav === '#contact' ? 'nav__link active' : 'nav__link'}>
-                                    <i className="fa fa-phone nav__icon"></i>
                                     Contact
                                 </Link>
                             </li>

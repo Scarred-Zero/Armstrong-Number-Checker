@@ -3,7 +3,6 @@ import PublicLayout from "../layouts/PublicLayout";
 import Home from "../features/public/home/Home";
 import Contact from "../features/public/contact/Contact";
 import UserProfile from "../features/user/profile/UserProfile";
-import ScrollUp from '../components/scrollUp/ScrollUp';
 
 const PublicRoutes = () => {
     return (
@@ -13,8 +12,6 @@ const PublicRoutes = () => {
                 <Route path="contact" element={<Contact />} />
                 <Route path="profile" element={<UserProfile />} />
             </Route>
-            <ScrollUp />
-
         </Routes>
     );
 };

@@ -19,7 +19,9 @@
 
 .footer__contact {
     float: right;
-    width: 15%;
+    width: 20%;
+    text-align: left;
+    word-wrap: break-word;
 }
 
 .footer__widget-title {

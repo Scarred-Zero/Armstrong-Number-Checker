@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, session
+from flask_login import login_required
 from flask_cors import cross_origin
+from ..config.variables import CLIENT_URI
 
 # Create a Blueprint
 arm_num_checker = Blueprint("arm_num_checker", __name__)
@@ -32,7 +34,8 @@ def validate_int(value, name):
 
 # API Endpoint to check a range of numbers
 @arm_num_checker.route("/arm_num_checker/check-range", methods=["POST", "OPTIONS"])
-@cross_origin(origin="http://localhost:5173")
+# @login_required
+@cross_origin(origin=CLIENT_URI)
 def check_range():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()
@@ -67,7 +70,8 @@ def check_range():
 
 # API Endpoint to check a specific number
 @arm_num_checker.route("/arm_num_checker/check-number", methods=["POST", "OPTIONS"])
-@cross_origin(origin="http://localhost:5173")
+# @login_required
+@cross_origin(origin=CLIENT_URI)
 def check_number():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()

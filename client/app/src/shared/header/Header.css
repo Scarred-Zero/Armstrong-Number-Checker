@@ -26,9 +26,6 @@
 
 .header__top-content-item {
 	display: flex;
-}
-
-.header__top-content-item:nth-child(2) {
 	gap: 2rem;
 }
 
@@ -53,9 +50,8 @@
 	transition: .3s ease-in-out;
 }
 
-.header__btn .btn i,
-.header__btn .btn__small i {
-	margin-right: 5px;
+.header__btn .btn .fa {
+	margin-left: 3px;
 }
 
 .header__btn .btn:hover {
@@ -155,7 +151,7 @@
 		padding: .3rem 2rem;
 	}
 
-	.header__top-content-item:nth-child(2) {
+	.header__top-content-item {
 		gap: 1rem;
 	}
 
@@ -229,7 +225,7 @@
 		height: 3rem;
 	}
 
-	.header__top-content-item:nth-child(2) {
+	.header__top-content-item {
 		gap: 1rem;
 	}
 
@@ -281,7 +277,7 @@
 		font-size: 7px;
 	}
 
-	.header__top-content-item:nth-child(2) {
+	.header__top-content-item {
 		gap: .5rem;
 	}
 
