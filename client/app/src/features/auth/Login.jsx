@@ -28,6 +28,7 @@ const Login = () => {
                 `${apiAuthUrlPrefix}/login`, formData
             );
             const token = res.data.data.token;
+            console.log(res.data)
             if (token) {
                 login(token);    
                 setMessage('Login successful! Go find those numbers.');

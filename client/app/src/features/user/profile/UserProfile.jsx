@@ -6,16 +6,31 @@ import './UserProfile.css';
 const UserProfile = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
+  const apiUserUrlPrefix = import.meta.env.VITE_API_USER_URL_PREFIX;
+
 
   useEffect(() => {
-    axios.get(`/api/v1/user/profile/${id}`)
-      .then(res => setUser(res.data.data))
-      .catch(() => setUser(null));
-  }, [id]);
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${apiUserUrlPrefix}/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUser(res.data.data);
+      } catch (error) {
+        setError(error.response?.data?.message || "User not found.");
+        setUser(null);
+      }
+    };
+    fetchUser();
+  }, []);
 
+  if (error) return <div>{error}</div>;
   if (!user) return <div>Loading...</div>;
 
-return (
+  return (
     <section id='profile-page'>
       <div className="page-header">
         <div className="container">
@@ -49,17 +64,18 @@ return (
             </div>
           </div>
           <div className="row align-items-center justify-content-around">
-            <Link to={`/profile/edit/${user.id}`}>
+            <Link to={`/profile/edit`}>
               <button className="btn btn-success btn-clear">
                 Edit <i className="fa fa-pen-to-square ml-2"></i>
               </button>
             </Link>
-            <Link to={`/profile/delete/${user.id}`}>
+            <Link to={`/profile/delete`}>
               <button className="btn btn-danger btn-clear">
                 Delete <i className="fa fa-trash ml-2"></i>
               </button>
             </Link>
           </div>
+
         </div>
       </div>
     </section>

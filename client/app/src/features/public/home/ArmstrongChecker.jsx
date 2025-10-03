@@ -12,7 +12,7 @@ const ArmstrongChecker = () => {
     const [error, setError] = useState(null);
     const resultRef = useRef(null);
     const errorRef = useRef(null);
-    const apiUrlPrefix = import.meta.env.VITE_API_PREFIX;
+    const apiAppUrlPrefix = import.meta.env.VITE_API_APP_URL_PREFIX;
 
     useEffect(() => {
         if (error) {
@@ -44,7 +44,7 @@ const ArmstrongChecker = () => {
     const handleRangeSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiUrlPrefix}/check-range`, {
+            const response = await axios.post(`${apiAppUrlPrefix}/check-range`, {
                 minNum: parseInt(minNum),
                 maxNum: parseInt(maxNum)
             });
@@ -67,7 +67,7 @@ const ArmstrongChecker = () => {
     const handleCheckSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiUrlPrefix}/check-number`, {
+            const response = await axios.post(`${apiAppUrlPrefix}/check-number`, {
                 number: parseInt(particularNum)
             });
             setCheckResult(response.data.result);

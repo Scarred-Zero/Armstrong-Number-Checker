@@ -4,10 +4,12 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import AppNameImg from '../../assets/images/app_name.png';
 import './Header.css';
 import { useAuth } from '../../context/AuthContext';
+import { useUser } from '../../context/UserContext';
 
 
 const Header = () => {
     const { isAuthenticated, logout } = useAuth();
+    const userData = useUser();
     const navigate = useNavigate();
     const apiAuthUrlPrefix = import.meta.env.VITE_API_AUTH_URL_PREFIX;
 
@@ -95,8 +97,8 @@ const Header = () => {
                             ) : (
                                 <div className="header__top-content-item">
                                     <div className="header__btn">
-                                        <Link to="/profile" className="btn">
-                                            View Profile <i className="fa fa-user"></i>
+                                        <Link to='/profile' className="btn">
+                                            Profile <i className="fa fa-user"></i>
                                         </Link>
                                     </div>
                                     <div className="header__btn">

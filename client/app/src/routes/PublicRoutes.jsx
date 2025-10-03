@@ -10,7 +10,6 @@ const PublicRoutes = () => {
             <Route element={<PublicLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="contact" element={<Contact />} />
-                <Route path="profile" element={<UserProfile />} />
             </Route>
         </Routes>
     );

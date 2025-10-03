@@ -20,11 +20,12 @@ users = Blueprint("users", __name__)
 
 
 # HANDLE GET ONE USERS
-@users.get("/profile/:id")
+@users.get("/profile")
 @catch_exception
 @authorise(["user"])
-def get_one_user(id):
-    user = db.session.execute(db.select(User).filter_by(id=id)).scalar()
+def get_my_profile():
+    current_user_id = get_jwt_identity()
+    user = db.session.execute(db.select(User).filter_by(id=current_user_id)).scalar()
     if not user:
         raise CustomRequestError("User does not exist!", 404)
     return response("User", user.data())
