@@ -12,7 +12,7 @@ from ..config.database import db
 from ..utils.errors import catch_exception, CustomRequestError
 from ..utils.helpers import response, get_slug
 from ..models import User, Feedback
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..utils.decorators import authorise
 
 
@@ -22,12 +22,12 @@ users = Blueprint("users", __name__)
 # HANDLE GET ONE USERS
 @users.get("/profile")
 @catch_exception
-@authorise(["user"])
+@jwt_required()
 def get_my_profile():
-    current_user_id = get_jwt_identity()
-    user = db.session.execute(db.select(User).filter_by(id=current_user_id)).scalar()
+    user_id = get_jwt_identity()
+    user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
     if not user:
-        raise CustomRequestError("User does not exist!", 404)
+        raise CustomRequestError("User not found", 404)
     return response("User", user.data())
 
 

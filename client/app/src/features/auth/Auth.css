@@ -118,7 +118,7 @@
     font-family: 'Sour Gummy', sans-serif;
 }
 
-.form__input :active {
+.form__input:active {
     color: #0077b5;
     background: rgba(0, 0, 0, 0.9);
     transition: background 500ms ease-in-out 0s;

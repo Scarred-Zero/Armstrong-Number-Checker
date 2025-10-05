@@ -74,7 +74,7 @@ const Register = () => {
             <div className="container">
                 <div className="auth__container">
                     <h1>Free Sign Up</h1>
-                    <p>Enter your Fullname, email address, contact and password to create an account</p>
+                    <p>Enter your Fullname, email address, and password to create an account</p>
                     <br />
                     {message && <div className="alert alert-success">{message}</div>}
                     {error && (

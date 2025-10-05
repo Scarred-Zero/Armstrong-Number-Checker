@@ -97,7 +97,7 @@ const Header = () => {
                             ) : (
                                 <div className="header__top-content-item">
                                     <div className="header__btn">
-                                        <Link to='/profile' className="btn">
+                                        <Link to='/user/profile' className="btn">
                                             Profile <i className="fa fa-user"></i>
                                         </Link>
                                     </div>

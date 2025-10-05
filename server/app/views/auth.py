@@ -4,7 +4,7 @@ from ..models.User import User
 from ..utils.helpers import validate_password
 from email_validator import validate_email, EmailNotValidError
 from werkzeug.security import check_password_hash
-from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import login_required, logout_user
 from ..utils.errors import catch_exception, CustomRequestError
 from ..utils.helpers import response
 from flask_jwt_extended import create_access_token

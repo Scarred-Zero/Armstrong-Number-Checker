@@ -7,13 +7,13 @@ import { UserProvider } from './context/UserContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <UserProvider>
-        <AlertProvider>
+    <AlertProvider>
+      <AuthProvider>
+        <UserProvider>
           <App />
-        </AlertProvider>
-      </UserProvider>
-    </AuthProvider>
+        </UserProvider>
+      </AuthProvider>
+    </AlertProvider>
   </StrictMode >,
 )
 

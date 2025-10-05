@@ -77,7 +77,7 @@ const Contact = () => {
                                 
                                 <div className="form__group">
                                     <label htmlFor="message">Message:</label>
-                                    <textarea class="form__input" cols="50" id="message" name="message" placeholder="Message" required="" rows="6"></textarea>
+                                    <textarea className="form__input" cols="50" id="message" name="message" placeholder="Message" required="" rows="6"></textarea>
                                 </div>
                             </div>
 

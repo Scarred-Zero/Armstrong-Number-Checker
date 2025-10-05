@@ -1,5 +1,5 @@
 :root {
-  --header-height: 3rem;
+  --header-height: 2rem;
   --z-fixed: 999;
   --at-success: #22bb33;
   --at-success-text-emphasis: #28a745;
@@ -434,11 +434,13 @@ BANNER AREA
 #breadcrumps {
   color: #0077b5;
   opacity: 1;
+  border-radius: 0.4rem;
+  padding: 0rem .3rem;
 }
 
 #breadcrumps:hover {
   color: #01a6ff;
-  border-bottom: 3px solid #01a6ff;
+  border-bottom: 2px solid #01a6ff;
   transition: .09s ease-in-out;
   text-decoration: none;
 }

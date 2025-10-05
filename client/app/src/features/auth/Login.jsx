@@ -4,9 +4,11 @@ import axios from 'axios';
 import AppNameImg from '../../assets/images/app_name.png';
 import './Auth.css';
 import { useAuth } from '../../context/AuthContext';
+import { useUser } from "../../context/UserContext";
 
 const Login = () => {
     const {isAuthenticated, login} = useAuth();
+    const { refreshUser } = useUser();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -28,9 +30,9 @@ const Login = () => {
                 `${apiAuthUrlPrefix}/login`, formData
             );
             const token = res.data.data.token;
-            console.log(res.data)
             if (token) {
                 login(token);    
+                refreshUser();
                 setMessage('Login successful! Go find those numbers.');
                 navigate("/");
             } else {
