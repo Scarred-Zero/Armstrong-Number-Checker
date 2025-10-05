@@ -163,21 +163,18 @@
 		top: 6.5rem;
 		right: 4%;
 		position: absolute;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		background-color: rgba(15, 18, 27, .7);
+		background-color: rgba(0, 0, 0, 0.2);
 		font-weight: 500;
-		padding: 2rem 1.5rem 4rem;
-		box-shadow: 0 -1px 6px rgba(220, 95, 0, .5);
+		padding: 1rem;
 		backdrop-filter: blur(5px);
-		border-radius: 1.5rem .5rem 1.5rem .5rem;
-		transition: 300ms ease-in;
+		border: #dc5f0063 solid 1px;
+		border-radius: 0.65rem;
+		transition: all 500ms ease-in-out;
 	}
 
 	.nav__list {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(1, 100px);
 	}
 
 	.nav__icon {
@@ -230,16 +227,18 @@
 		width: 15rem;
 	}
 
+	.nav__menu {
+		top: 5.5rem;
+		right: 4%;
+		padding: 0;
+	}
+
 	.nav__toggle {
 		font-size: 1.3rem;
 	}
 
 	.nav__link {
-		font-size: .9rem;
-	}
-
-	.nav__menu {
-		padding: 1rem 1rem 0rem 1rem;
+		font-size: .7rem;
 	}
 
 	.nav__icon {
@@ -283,7 +282,4 @@
 		font-size: .7rem;
 	}
 
-	.nav__list {
-		column-gap: 0;
-	}
 }

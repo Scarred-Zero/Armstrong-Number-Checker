@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import UserLayout from "../layouts/UserLayout";
-import UserProfile from "../features/user/profile/UserProfile";
-import EditProfile from "../features/user/profile/EditProfile";
+import UserProfile from "../features/user/profile/details/UserProfile";
+import EditProfile from "../features/user/profile/edit/EditProfile";
 import DeleteProfile from "../features/user/profile/DeleteProfile";
 
 const UserRoutes = () => {

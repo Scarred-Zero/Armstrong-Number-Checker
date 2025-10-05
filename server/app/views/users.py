@@ -32,36 +32,34 @@ def get_my_profile():
 
 
 # HANDLE UPDATE USER
-# @users.patch("/<id>")
-# @catch_exception
-# @authorise(["admin", "user"])
-# def update_user(id):
-#     # CHECK FOR ID
-#     if not id:
-#         raise CustomRequestError("id is required!")
+@users.patch("/profile/edit")
+@catch_exception
+@jwt_required
+def update_user():
+    user_id = get_jwt_identity()
 
-#     # CHECK IF USER EXISTS
-#     user = db.session.execute(db.select(User).filter_by(id=id)).scalar()
-#     if not user:
-#         raise CustomRequestError("User does not exist!", 404)
+    # CHECK IF USER EXISTS
+    user = db.session.execute(db.select(User).filter_by(id=id)).scalar()
+    if not user:
+        raise CustomRequestError("User does not exist!", 404)
 
-#     # UPDATE USERS DATA
-#     body = request.get_json()
-#     prev_data = user.data()
+    # UPDATE USERS DATA
+    body = request.get_json()
+    prev_data = user.data()
 
-#     user.bio = body.get("bio") or prev_data.get("bio")
-#     user.name = body.get("name") or prev_data.get("name")
-#     user.gender = body.get("gender") or prev_data.get("gender")
-#     user.email = body.get("email") or prev_data.get("email")
+    user.bio = body.get("bio") or prev_data.get("bio")
+    user.name = body.get("name") or prev_data.get("name")
+    user.gender = body.get("gender") or prev_data.get("gender")
+    user.email = body.get("email") or prev_data.get("email")
 
-#     # RESET IS EMAIL VERIFIED
-#     if body.get("email") and body.get("email") != prev_data.get("email"):
-#         user.is_email_verified = False
+    # RESET IS EMAIL VERIFIED
+    if body.get("email") and body.get("email") != prev_data.get("email"):
+        user.is_email_verified = False
 
-#     db.session.add(user)
-#     db.session.commit()
+    db.session.add(user)
+    db.session.commit()
 
-#     return response("User updated!", user.data())
+    return response("User updated!", user.data())
 
 
 # # HANDLE DELETE USER
