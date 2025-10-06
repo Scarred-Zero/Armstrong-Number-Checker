@@ -4,10 +4,9 @@ from ..models.User import User
 from ..utils.helpers import validate_password
 from email_validator import validate_email, EmailNotValidError
 from werkzeug.security import check_password_hash
-from flask_login import login_required, logout_user
 from ..utils.errors import catch_exception, CustomRequestError
 from ..utils.helpers import response
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from datetime import timedelta
 
 
@@ -94,9 +93,9 @@ def handle_user_registration():
 # LOGOUT A USER
 @auth.post("/logout")
 @catch_exception
-@login_required
+@jwt_required()
 def handle_user_logout():
-    logout_user()
+    # If using JWT only, just return a success response
     return response("Logout successful!", {}), 200
 
 

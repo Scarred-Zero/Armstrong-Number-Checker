@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import UserLayout from "../layouts/UserLayout";
 import UserProfile from "../features/user/profile/details/UserProfile";
 import EditProfile from "../features/user/profile/edit/EditProfile";
-import DeleteProfile from "../features/user/profile/DeleteProfile";
 
 const UserRoutes = () => {
     return (
@@ -10,7 +9,6 @@ const UserRoutes = () => {
             <Route element={<UserLayout />}>
                 <Route path="profile" element={<UserProfile />} />
                 <Route path="profile/edit" element={<EditProfile />} />
-                <Route path="profile/delete" element={<DeleteProfile />} />
             </Route>
         </Routes>
     );

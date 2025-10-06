@@ -1,0 +1,14 @@
+#profile-page .auth__form-container {
+    grid-template-columns: repeat(1, 250px);
+}
+
+#profile-page .auth__form-container .form__input {
+    background: rgba(245, 243, 243, 0.9);
+}
+
+#profile-page .auth__form-container .form__input:hover,
+#profile-page .auth__form-container .form__input:focus {
+    outline: none;
+    border: solid 3px #DC5F00;
+    transition: all 500ms ease-in-out;
+}

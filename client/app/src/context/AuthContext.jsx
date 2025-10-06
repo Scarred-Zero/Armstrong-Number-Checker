@@ -20,15 +20,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
     setIsAuthenticated(true);
-    // ❌ don’t call useUser() here
-    // ✅ let UserProvider react to token change
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
     setIsAuthenticated(false);
-    // UserProvider will clear user automatically
   };
 
   return (

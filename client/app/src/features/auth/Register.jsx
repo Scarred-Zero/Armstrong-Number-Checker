@@ -27,8 +27,7 @@ const Register = () => {
                 `${apiAuthUrlPrefix}/register`, formData
             )
                 .then(() => {
-                    setMessage('Registration successful! Please log in.');
-                    navigate('/secure/sign-in');
+                    navigate('/secure/sign-in', { state: { message: 'Registration successful! Please log in' } });
                 }
                 )
                 .catch((err) => {

@@ -240,17 +240,20 @@ BUTTONS STYLE
 
 .alert-success {
   background-color: #b6adad !important;
-  color: rgb(51, 153, 0) !important;
+  color: rgb(48, 116, 13)!important;
+  font-weight: 700;
 }
 
 .alert-warning {
   background-color: #ffffff !important;
   color: rgb(255, 204, 0) !important;
+  font-weight: 700;
 }
 
 .alert-danger {
   color: #f60101;
   background-color: #ffffff;
+  font-weight: 700;
 }
 
 
@@ -495,7 +498,7 @@ BANNER AREA
   }
 }
 
-@media screen and (max-width: 542px) {
+@media screen and (max-width: 576px) {
   .banner .banner__content h1 {
     line-height: 45px;
   }

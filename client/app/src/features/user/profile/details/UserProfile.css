@@ -2,7 +2,6 @@
     margin-bottom: 2rem;
 }
 
-
 .user__content {
     width: 100%;
     display: flex;
@@ -48,8 +47,13 @@
     margin-top: 1rem;
 }
 
+#profile-page .alert {
+    left: 35%;
+    width: 30%;
+}
 
-@media screen and (max-width: 542px) {
+
+@media screen and (max-width: 576px) {
     .user__content.error h2 {
         font-size: 24px;
     }
@@ -57,13 +61,58 @@
     .user__content.error p {
         font-size: 16px;
     }
+
+    #profile-page .alert {
+        left: 10%;
+        width: 80%;
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 350px;
+    text-align: center;
+}
+
+.modal-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+@media screen and (max-width: 576px) {
+    .modal {
+        padding: 1.2rem;
+        max-width: 95vw;
+        font-size: 16px;
+    }
+    .modal-actions {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
 }
 
 @media screen and (max-width: 390px) {
     .user__content.error h2 {
         font-size: 20px;
     }
-
+    
     .user__content h3 {
         font-size: 24px;
     }
@@ -74,6 +123,17 @@
 
     .user__content_2 .btn__clear {
         padding: .7rem .5rem;
+    }
+
+    #profile-page .alert {
+        left: 10%;
+        width: 80%;
+        font-size: 16px;
+    }
+    
+    .modal {
+        padding: 0.7rem;
+        font-size: 15px;
     }
 }
 
@@ -96,5 +156,10 @@
 
     .user__content_2 .btn__clear {
         padding: .6rem .5rem;
+    }
+    
+    .modal {
+        padding: 0.4rem;
+        font-size: 13px;
     }
 }

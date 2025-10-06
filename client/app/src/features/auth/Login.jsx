@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import AppNameImg from '../../assets/images/app_name.png';
 import './Auth.css';
@@ -7,22 +7,31 @@ import { useAuth } from '../../context/AuthContext';
 import { useUser } from "../../context/UserContext";
 
 const Login = () => {
-    const {isAuthenticated, login} = useAuth();
+    const { isAuthenticated, login } = useAuth();
     const { refreshUser } = useUser();
     const [formData, setFormData] = useState({ email: '', password: '' });
-    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, isLoading] = useState(false);
     const errorRef = useRef();
     const navigate = useNavigate();
     const apiAuthUrlPrefix = import.meta.env.VITE_API_AUTH_URL_PREFIX;
+    const location = useLocation();
+    const [message, setMessage] = useState(location.state?.message || '');
+
+    useEffect(() => {
+        if (message) {
+            const timer = setTimeout(() => setMessage(''), 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         isLoading(true)
         try {
@@ -31,10 +40,9 @@ const Login = () => {
             );
             const token = res.data.data.token;
             if (token) {
-                login(token);    
+                login(token);
                 refreshUser();
-                setMessage('Login successful! Go find those numbers.');
-                navigate("/");
+                navigate('/', { state: { message: 'Login successful! Go find those numbers.' } });
             } else {
                 setError("No token recieved. Login Failed.");
             }
@@ -47,7 +55,7 @@ const Login = () => {
 
     useEffect(() => {
         if (error) {
-            const timer = setTimeout(() => setError(null), 10000);
+            const timer = setTimeout(() => setError(null), 8000);
             return () => clearTimeout(timer)
         }
     }, [error]);

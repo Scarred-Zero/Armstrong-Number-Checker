@@ -5,6 +5,7 @@ import AppNameImg from '../../assets/images/app_name.png';
 import './Header.css';
 import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../context/UserContext';
+import axios from 'axios';
 
 
 const Header = () => {
@@ -16,7 +17,7 @@ const Header = () => {
     const handleLogout = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(
+            const res = await axios.post(
                 `${apiAuthUrlPrefix}/logout`, {},
                 {
                     headers: {
@@ -24,13 +25,16 @@ const Header = () => {
                     }
                 }
             );
-            logout();
-            navigate('/secure/sign-in');
+            if (res.status === 200) {
+                logout();
+                navigate('/secure/sign-in', { state: { message: 'Logged out successfully.' } });
+            } else {
+                throw new Error('Logout failed.');
+            }
         } catch (err) {
-            // Optionally show an error message
             console.error('Logout failed:', err);
-            logout();
-            navigate('/secure/sign-in');
+            // Optionally show a user-friendly alert
+            navigate('/', { state: { error: 'Logout Failed. Try again.' } });
         }
     };
 
@@ -53,14 +57,20 @@ const Header = () => {
     }, []);
 
     const [menuOpened, setMenuOpened] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const getMenuStyles = (menuOpened) => {
-        if (document.documentElement.clientWidth <= 800) {
+        if (windowWidth <= 800) {
             return { right: menuOpened ? '4%' : '-100%' };
         }
         return {};
     };
-
     const [activeNav, setActiveNav] = useState('#home');
 
     return (
@@ -102,9 +112,9 @@ const Header = () => {
                                         </Link>
                                     </div>
                                     <div className="header__btn">
-                                        <a href="#" className="btn" id="logout" onClick={handleLogout}>
+                                        <button className="btn" id="logout" onClick={handleLogout}>
                                             Logout <i className="fa fa-sign-out"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             )}

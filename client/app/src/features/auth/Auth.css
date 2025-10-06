@@ -134,12 +134,12 @@
 }
 
 .submit_btn {
-    background: #0a3c56;
+    background: #0b4c6e;
     color: #fff;
     border: none;
     font-size: 16px;
     padding: 1.5rem 2rem;
-	box-shadow: 5px 5px 1px .2px rgba(7, 218, 218, 0.2);
+    box-shadow: 5px 5px 1px .2px rgba(7, 218, 218, 0.2);
 }
 
 .submit_btn:hover {
@@ -207,6 +207,10 @@
 
     .auth__header>.nav__logo>.appName__img {
         width: 15rem;
+    }
+
+    #login-page .alert {
+        font-size: 14px;
     }
 }
 
