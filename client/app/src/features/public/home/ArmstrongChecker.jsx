@@ -50,8 +50,8 @@ const ArmstrongChecker = () => {
             });
             if (response.status === 200) {
                 setRangeResult(response.data.armstrong_numbers);
-                // setMaxNum('');
-                // setMinNum('');
+                setMaxNum('');
+                setMinNum('');
                 setError(null);
             } else {
                 setError('Unexpected response status');
