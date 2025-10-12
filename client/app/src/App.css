@@ -61,7 +61,7 @@ body {
 p {
   color: #F7F7F7;
   font-family: "Ubuntu", sans-serif;
-  line-height: 20px;
+  line-height: 26px;
   font-size: 19px;
 }
 
@@ -515,6 +515,10 @@ BANNER AREA
   .page__header {
     padding: 7rem 0 3rem 0;
   }
+
+  p {
+    line-height: 24px;
+  }
 }
 
 @media screen and (max-width: 390px) {
@@ -544,5 +548,9 @@ BANNER AREA
 
   .page__header .page__header-content ul li {
     margin-bottom: .7rem;
+  }
+
+  p {
+    line-height: 20px;
   }
 }

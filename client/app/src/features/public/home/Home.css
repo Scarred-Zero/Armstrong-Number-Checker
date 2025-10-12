@@ -113,6 +113,7 @@ ARMSTRONG FORM SECTION
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #DC5F00;
     border-radius: 0.5rem;
+    height: fit-content;
 }
 
 .result h3 {
@@ -227,6 +228,71 @@ ABOUT SECTION
     right: -8rem;
 }
 
+.attempt-history {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    border-radius: 8px;
+    color: #0077b5;
+}
+
+.attempt-history ul {
+    padding: 2rem;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.attempt-history li {
+    margin-bottom: 1rem;
+    margin-right: 10px;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.202);
+    padding: 0.5rem;
+    word-break: break-word;
+}
+
+.attempt-history .attempt-entry {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.attempt-history .attempt-details {
+    flex: 1;
+}
+
+.attempt-details strong {
+    color: #0077b5;
+}
+
+.attempt-history .attempt-entry .attempt-details .attempt-timestamp {
+    margin-top: 0.7rem;
+}
+
+.attempt-history .attempt-entry .attempt-details .attempt-timestamp {
+    font-size: 14px;
+}
+
+
+.attempt-history ul::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.attempt-history ul::-webkit-scrollbar-thumb {
+    background: #DC5F00;
+    border-radius: 8px;
+}
+
+.attempt-history ul::-webkit-scrollbar-track {
+    background: transparent;
+}
 
 
 @media screen and (max-width: 1030px) {
@@ -279,7 +345,6 @@ ABOUT SECTION
     #error {
         left: 0;
     }
-
 }
 
 
@@ -354,6 +419,27 @@ ABOUT SECTION
         flex-direction: column;
         gap: 2rem;
     }
+
+    .attempt-history h3 {
+        font-size: 20px;
+    }
+
+    .attempt-history .attempt-details p {
+        font-size: 14px;
+    }
+
+    .attempt-details strong {
+        font-size: 16px;
+    }
+
+    .attempt-history ul {
+        max-height: 220px;
+    }
+
+    .attempt-history button {
+        padding: 0.5rem;
+        font-size: 14px;
+    }
 }
 
 @media screen and (max-width: 390px) {
@@ -389,6 +475,39 @@ ABOUT SECTION
 
     .result h3 {
         font-size: 20px;
+    }
+
+    .attempt-history {
+        padding: 0.6rem;
+    }
+
+    .attempt-history h3 {
+        font-size: 18px;
+    }
+
+    .attempt-history .attempt-details p {
+        font-size: 12px;
+    }
+
+    .attempt-details strong {
+        font-size: 14px;
+    }
+
+    .attempt-history ul {
+        max-height: 180px;
+    }
+
+    .attempt-history li {
+        padding: 0.3rem 0.3rem 0 0.3rem;
+    }
+
+    .attempt-history button {
+        padding: 0.3rem;
+        font-size: 12px;
+    }
+
+    .attempt-history .attempt-entry .attempt-details .attempt-timestamp {
+        font-size: 12px;
     }
 }
 

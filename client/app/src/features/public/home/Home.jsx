@@ -9,6 +9,13 @@ const Home = () => {
   const [message, setMessage] = useState(location.state?.message || '');
   const [error, setError] = useState(location.state?.error || '');
 
+  // clear history state so message does not reappear on refresh
+  useEffect(() => {
+    if (location.state) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, []);
+
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => setMessage(''), 2000);

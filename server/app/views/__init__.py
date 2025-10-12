@@ -9,7 +9,7 @@ routes.register_blueprint(auth, url_prefix="/auth")
 
 from .app_routes import arm_num_checker
 
-routes.register_blueprint(arm_num_checker, url_prefix="/app")
+routes.register_blueprint(arm_num_checker, url_prefix="/arm_num_checker")
 
 from .users import users
 

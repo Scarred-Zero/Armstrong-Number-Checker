@@ -19,3 +19,5 @@ CLIENT_URI = env('CLIENT_URI')
 
 # JWT SECRET
 JWT_SECRET = env('JWT_SECRET')
+
+API_PREFIX = env('API_PREFIX', default='/api/v1')

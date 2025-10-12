@@ -1,7 +1,10 @@
 from flask import Blueprint, request, jsonify, session
-from flask_login import login_required
 from flask_cors import cross_origin
 from ..config.variables import CLIENT_URI
+from ..config.database import db
+from ..models.Attempt import Attempt
+from flask_jwt_extended import get_jwt_identity, jwt_required
+import json
 
 # Create a Blueprint
 arm_num_checker = Blueprint("arm_num_checker", __name__)
@@ -33,18 +36,20 @@ def validate_int(value, name):
 
 
 # API Endpoint to check a range of numbers
-@arm_num_checker.route("/arm_num_checker/check-range", methods=["POST", "OPTIONS"])
-# @login_required
+@arm_num_checker.route("/check-range", methods=["POST", "OPTIONS"])
+@jwt_required(optional=True)
 @cross_origin(origin=CLIENT_URI)
 def check_range():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()
-    data = request.json
+
+    data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "No input data provided."}), 400
 
     min_num, min_err = validate_int(data.get("minNum"), "Minimum number")
     max_num, max_err = validate_int(data.get("maxNum"), "Maximum number")
+
     if min_err or max_err:
         return jsonify({"error": min_err or max_err}), 400
     if min_num > max_num:
@@ -57,25 +62,45 @@ def check_range():
             400,
         )
 
+    user_id = get_jwt_identity()
     armstrong_numbers = [n for n in range(min_num, max_num + 1) if is_armstrong(n)]
-    if not armstrong_numbers:
-        return (
-            jsonify({"error": "No Armstrong numbers found within the given range."}),
-            400,
-        )
 
+    # Always store a consistent result (JSON string). Decide to record empty attempts as empty array.
+    attempt_result_json = json.dumps(armstrong_numbers)
+
+    attempt = Attempt(
+        user_id=user_id,
+        attempt_type="range",
+        min_num=min_num,
+        max_num=max_num,
+        result=attempt_result_json,
+    )
+    try:
+        db.session.add(attempt)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Failed to save attempt: {str(e)}"}), 500
+
+    # keep session value consistent (store actual list)
     session["armstrong_numbers"] = armstrong_numbers
-    return jsonify({"armstrong_numbers": armstrong_numbers}), 200
+    # return consistent structure (200), even if empty list
+    resp = {"armstrong_numbers": armstrong_numbers}
+    if not armstrong_numbers:
+        resp["message"] = "No Armstrong numbers found within the given range."
+
+    return jsonify(resp), 200
 
 
 # API Endpoint to check a specific number
-@arm_num_checker.route("/arm_num_checker/check-number", methods=["POST", "OPTIONS"])
-# @login_required
+@arm_num_checker.route("/check-number", methods=["POST", "OPTIONS"])
+@jwt_required(optional=True)
 @cross_origin(origin=CLIENT_URI)
 def check_number():
     if request.method == "OPTIONS":
         return build_cors_preflight_response()
-    data = request.json
+
+    data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "No input data provided."}), 400
 
@@ -83,13 +108,85 @@ def check_number():
     if err:
         return jsonify({"error": err}), 400
 
-    result = (
+    user_id = get_jwt_identity()
+    is_arm = is_armstrong(number)
+    result_str = (
         f"{number} is an Armstrong Number"
-        if is_armstrong(number)
+        if is_arm
         else f"{number} is not an Armstrong Number"
     )
-    session["check_num_result"] = result
-    return jsonify({"result": result}), 200
+
+    # Store attempt (result as plain string)
+    attempt = Attempt(
+        user_id=user_id,
+        attempt_type="single",
+        number=number,
+        result=result_str,
+    )
+
+    try:
+        db.session.add(attempt)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Failed to save attempt: {str(e)}"}), 500
+
+    session["check_num_result"] = result_str
+    return jsonify({"result": result_str}), 200
+
+
+# GET ALL ATTEMPTS FOR THE LOGGED-IN USER
+@arm_num_checker.route("/attempts", methods=["GET"])
+@jwt_required(optional=True)
+def get_attempts():
+    user_id = get_jwt_identity()
+    attempts = (
+        Attempt.query.filter_by(user_id=user_id)
+        .order_by(Attempt.timestamp.desc())
+        .all()
+    )
+    return jsonify({"attempts": [a.data() for a in attempts]}), 200
+
+
+# DELETEA A SINGLE ATTEMPT
+@arm_num_checker.route("/attempts/<int:attempt_id>", methods=["DELETE"])
+@jwt_required(optional=True)
+@cross_origin(origin=CLIENT_URI)
+def delete_attempt(attempt_id):
+    """
+    Delete a single attempt.
+    - If attempt.user_id is None (guest attempt), allow deletion only for unauthenticated requests.
+    - If attempt.user_id is set, only the owner (matching JWT identity) may delete it.
+    """
+    user_id = get_jwt_identity()  # may be None when unauthenticated
+    attempt = Attempt.query.filter_by(id=attempt_id).first()
+    if not attempt:
+        return jsonify({"error": "Attempt not found."}), 404
+
+    # Guest attempt (no owner)
+    if attempt.user_id is None:
+        # allow deletion only if requester is NOT authenticated (guest)
+        if user_id is not None:
+            return jsonify({"error": "Not authorized to delete a guest attempt."}), 403
+        # proceed to delete guest attempt
+
+    else:
+        # Owned attempt: requester must be authenticated
+        if user_id is None:
+            return (
+                jsonify({"error": "Authentication required to delete this attempt."}),
+                401,
+            )
+        if attempt.user_id != user_id:
+            return jsonify({"error": "Not authorized to delete this attempt."}), 403
+
+    try:
+        db.session.delete(attempt)
+        db.session.commit()
+        return jsonify({"message": "Attempt deleted."}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Failed to delete attempt: {str(e)}"}), 500
 
 
 # # ROUTES FOR CONTACT PAGE

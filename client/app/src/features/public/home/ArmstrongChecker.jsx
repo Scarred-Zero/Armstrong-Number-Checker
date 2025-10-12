@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Tooltip from '../../../components/Tooltip/Tooltip';
+import AttemptHistory from './AttemptHistory';
 import './Home.css'
 
 const ArmstrongChecker = () => {
@@ -13,10 +14,11 @@ const ArmstrongChecker = () => {
     const resultRef = useRef(null);
     const errorRef = useRef(null);
     const apiAppUrlPrefix = import.meta.env.VITE_API_APP_URL_PREFIX;
+    const [attemptsVersion, setAttemptsVersion] = useState(0);
 
     useEffect(() => {
         if (error) {
-            const timer = setTimeout(() => setError(null), 10000); // 10 seconds
+            const timer = setTimeout(() => setError(null), 8000); // 10 seconds
             return () => clearTimeout(timer);
         }
     }, [error]);
@@ -24,35 +26,41 @@ const ArmstrongChecker = () => {
     useEffect(() => {
         if (error && errorRef.current) {
             errorRef.current.scrollIntoView({ behavior: 'smooth' });
-            // Adjust offset (e.g., scroll up by 80px)
             setTimeout(() => {
                 window.scrollBy({ top: -150, left: 0, behavior: 'smooth' });
-            }, 400); // Delay to allow scrollIntoView to finish
+            }, 400);
         }
     }, [error]);
 
     useEffect(() => {
         if ((rangeResult || checkResult) && resultRef.current) {
             resultRef.current.scrollIntoView({ behavior: 'smooth' });
-            // Adjust offset (e.g., scroll up by 80px)
             setTimeout(() => {
                 window.scrollBy({ top: -150, left: 0, behavior: 'smooth' });
-            }, 400); // Delay to allow scrollIntoView to finish
+            }, 400);
         }
     }, [rangeResult, checkResult]);
+
+    const bumpAttempts = () => setAttemptsVersion(v => v + 1);
 
     const handleRangeSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiAppUrlPrefix}/check-range`, {
-                minNum: parseInt(minNum),
-                maxNum: parseInt(maxNum)
-            });
+            const token = localStorage.getItem('token');
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+            const response = await axios.post(
+                `${apiAppUrlPrefix}/check-range`,
+                { minNum, maxNum },
+                { headers }
+            );
             if (response.status === 200) {
-                setRangeResult(response.data.armstrong_numbers);
+                setRangeResult(response.data.armstrong_numbers || '[Nothing within this range. Try again.]');
                 setMaxNum('');
                 setMinNum('');
                 setError(null);
+                bumpAttempts();
+                setTimeout(bumpAttempts, 1200);
             } else {
                 setError('Unexpected response status');
                 setRangeResult(null);
@@ -63,18 +71,25 @@ const ArmstrongChecker = () => {
         }
     };
 
-
     const handleCheckSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiAppUrlPrefix}/check-number`, {
-                number: parseInt(particularNum)
-            });
+            const token = localStorage.getItem('token');
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+            const response = await axios.post(
+                `${apiAppUrlPrefix}/check-number`,
+                { number: parseInt(particularNum) },
+                { headers }
+            );
             setCheckResult(response.data.result);
             setParticularNum('');
             setError(null);
+            bumpAttempts();
+            setTimeout(bumpAttempts, 1200);
         } catch (err) {
-            setError(err.response.data.error);
+            setError(err.response?.data?.error || 'An error occurred');
+            console.log(err.response?.data?.error)
             setCheckResult(null);
         }
     };
@@ -83,7 +98,6 @@ const ArmstrongChecker = () => {
         <section className="armstrong__section section__padding">
             <div className="container">
                 <div className="armstrong__container">
-
                     <form id="armstrong-form" className="armstrong__form form__row" method="POST" onSubmit={handleRangeSubmit}>
                         <div className="armstrong__content">
                             <div className="armstrong__content-item">
@@ -163,7 +177,6 @@ const ArmstrongChecker = () => {
                             {error}
                         </div>
                     )}
-
                 </div>
                 {(rangeResult || checkResult) && (
                     <div ref={resultRef} className='results__container'>
@@ -180,9 +193,11 @@ const ArmstrongChecker = () => {
                                 </button>
                                 <h3>Armstrong Numbers in Range:</h3>
                                 <ul>
-                                    {rangeResult.map((num, index) => (
-                                        <li key={index}>{num}</li>
-                                    ))}
+                                    <li>
+                                        <strong>
+                                            {Array.isArray(rangeResult) ? (rangeResult.length ? rangeResult.join(', ') : '[Nothing within this range. Try again.]') : rangeResult}
+                                        </strong>
+                                    </li>
                                 </ul>
                             </div>
                         )}
@@ -203,6 +218,9 @@ const ArmstrongChecker = () => {
                         )}
                     </div>
                 )}
+                <br />
+                <br />
+                <AttemptHistory apiAppUrlPrefix={apiAppUrlPrefix} version={attemptsVersion} />
             </div>
         </section>
     );

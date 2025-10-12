@@ -15,6 +15,7 @@ from .config.variables import (
     MYSQL_DB,
     DATABASE_URI,
     CLIENT_URI,
+    API_PREFIX,
 )
 from flask_jwt_extended import JWTManager
 from .utils.helpers import response
@@ -45,7 +46,7 @@ def create_app():
     # BLUEPRINT FOR ALL ROUTES
     from .views import routes
 
-    app.register_blueprint(routes, url_prefix="/api/v1")
+    app.register_blueprint(routes, url_prefix=API_PREFIX)
 
     # Other setups
     db.init_app(app)
